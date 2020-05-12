@@ -1,37 +1,26 @@
 {
-  "name": "revaboards",
+  "name": "thomas_hoang_p1_api",
   "version": "1.0.0",
-  "description": "",
-  "main": "./build/index.js",
+  "description": "Project 1 Reimbursment API",
+  "main": "index.js",
   "scripts": {
-    "start": "node ./build/index.js",
-    "dev-start": "tsc && node ./build/index.js",
-    "test": "jest --no-cache",
-    "coverage": "jest --coverage --no-cache",
-    "watch-tests": "jest --watch --no-cache",
-    "build": "tsc"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Wezley Singleton",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/200406-java-react-usf/Thomas_Hoang_P1_API.git"
+  },
+  "author": "Thomas Hoang",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/200406-java-react-usf/Thomas_Hoang_P1_API/issues"
+  },
+  "homepage": "https://github.com/200406-java-react-usf/Thomas_Hoang_P1_API#readme",
   "dependencies": {
-    "dotenv": "^8.2.0",
-    "express": "^4.17.1",
-    "express-session": "^1.17.1",
-    "pg": "^8.0.3"
+    "express": "^4.17.1"
   },
   "devDependencies": {
-    "@types/express": "^4.17.6",
-    "@types/express-session": "^1.17.0",
-    "@types/jest": "^25.2.1",
-    "@types/node": "^12.12.37",
-    "@types/pg": "^7.14.3",
-    "@typescript-eslint/eslint-plugin": "^2.29.0",
-    "@typescript-eslint/parser": "^2.29.0",
-    "eslint": "^6.8.0",
-    "jest": "^25.3.0",
-    "morgan": "^1.10.0",
-    "nodemon": "^2.0.3",
-    "ts-jest": "^25.4.0",
+    "jest": "^26.0.1",
     "typescript": "^3.8.3"
   }
 }
