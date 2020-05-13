@@ -5,10 +5,10 @@ import morgan from 'morgan';
 import path from 'path';
 
 import { Pool } from 'pg';
-import { sessionMiddleware } from '../src/middleware/session-middleware';
-import { corsFilter } from '../src/middleware/cors-filter';
-import { UserRouter } from '../src/routers/user-router';
-import { AuthRouter } from '../src/routers/auth-router';
+import { sessionMiddleware } from './middleware/session-middleware';
+import { corsFilter } from './middleware/cors-filter';
+import { UserRouter } from './routers/user-router';
+import { AuthRouter } from './routers/auth-router';
 
 /*Environment Configuration*/
 dotenv.config();

@@ -13,16 +13,16 @@ export class UserRepository implements CrudRepository<User> {
 /*Quere to grab all of the users within the users table in RDS using the base query and displaying the rold id as the actual role name*/
     baseQuery = `
         select
-            au.id, 
+            au.ers_user_id, 
             au.username, 
             au.password, 
             au.first_name,
             au.last_name,
             au.email,
-            ur.name as role_name
+            ur.role_name as role_name
         from ers_users au
         join ers_user_roles ur
-        on au.role_id = ur.id
+        on au.user_role_id = ur.role_id
     `;
 
     /*Grabs all of the users from the RDS using the base query*/
