@@ -7,11 +7,3 @@ export interface UserSchema {
     email: string,
     role_name: string
 }
-
-export interface PostSchema {
-
-}
-
-export interface ThreadSchema {
-    
-}

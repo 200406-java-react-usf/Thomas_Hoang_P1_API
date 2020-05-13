@@ -3,8 +3,7 @@ import { UserRepository } from "../repos/user-repo";
 import { isValidId, isValidStrings, isValidObject, isPropertyOf, isEmptyObject } from "../util/validator";
 import { 
     BadRequestError, 
-    ResourceNotFoundError, 
-    NotImplementedError, 
+    ResourceNotFoundError,  
     ResourcePersistenceError, 
     AuthenticationError 
 } from "../errors/errors";
@@ -16,6 +15,7 @@ export class UserService {
         this.userRepo = userRepo;
     }
 
+    /*Grabs all users or returns an error if no users are found*/
     async getAllUsers(): Promise<User[]> {
 
         let users = await this.userRepo.getAll();
@@ -28,6 +28,7 @@ export class UserService {
 
     }
 
+    /*Checks if the provided id is a valid id and if the id exists*/
     async getUserById(id: number): Promise<User> {
 
         if (!isValidId(id)) {
@@ -44,6 +45,7 @@ export class UserService {
 
     }
 
+    /*Checks if the input is valid and if the input is an actual property of users*/
     async getUserByUniqueKey(queryObj: any): Promise<User> {
 
         // we need to wrap this up in a try/catch in case errors are thrown for our awaits
@@ -82,6 +84,7 @@ export class UserService {
         }
     }
 
+    /*Validates that the credentials provided are correct*/
     async authenticateUser(un: string, pw: string): Promise<User> {
 
         try {
@@ -107,6 +110,7 @@ export class UserService {
 
     }
 
+    /*Verifies if the new user is provided valid objects or if the username or email is already taken*/
     async addNewUser(newUser: User): Promise<User> {
         
         try {
@@ -115,12 +119,14 @@ export class UserService {
                 throw new BadRequestError('Invalid property values found in provided user.');
             }
 
+            //Checks if the updated username is already used
             let usernameAvailable = await this.isUsernameAvailable(newUser.username);
 
             if (!usernameAvailable) {
                 throw new ResourcePersistenceError('The provided username is already taken.');
             }
         
+            //Checks if the updated email is already used
             let emailAvailable = await this.isEmailAvailable(newUser.email);
     
             if (!emailAvailable) {
@@ -135,9 +141,9 @@ export class UserService {
         } catch (e) {
             throw e
         }
-
     }
 
+    /*Checks if the updated user is providing valid information and if the username and email are already taken.*/
     async updateUser(updatedUser: User): Promise<boolean> {
         
         try {
@@ -146,7 +152,18 @@ export class UserService {
                 throw new BadRequestError('Invalid user provided (invalid values found).');
             }
 
-            // let repo handle some of the other checking since we are still mocking db
+            let usernameAvailable = await this.isUsernameAvailable(updatedUser.username);
+
+            if (!usernameAvailable) {
+                throw new ResourcePersistenceError('The provided username is already taken.');
+            }
+
+            let emailAvailable = await this.isEmailAvailable(updatedUser.email);
+    
+            if (!emailAvailable) {
+                throw new  ResourcePersistenceError('The provided email is already taken.');
+            }
+
             return await this.userRepo.update(updatedUser);
         } catch (e) {
             throw e;
@@ -154,17 +171,23 @@ export class UserService {
 
     }
 
+    /*Checks if the provided id is a valid id number*/
     async deleteById(id: number): Promise<boolean> {
         
         try {
-            throw new NotImplementedError();
-        } catch (e) {
+            if (!isValidId(id)){
+                throw new BadRequestError();
+            }
+
+        return await this.userRepo.deleteById(id);
+        }
+        catch (e) {
             throw e;
         }
-
     }
 
-    private async isUsernameAvailable(username: string): Promise<boolean> {
+    /*Checks if the provided username is already taken*/
+    async isUsernameAvailable(username: string): Promise<boolean> {
 
         try {
             await this.getUserByUniqueKey({'username': username});
@@ -178,7 +201,8 @@ export class UserService {
 
     }
 
-    private async isEmailAvailable(email: string): Promise<boolean> {
+    /*Checks if the provided email is already taken*/
+    async isEmailAvailable(email: string): Promise<boolean> {
         
         try {
             await this.getUserByUniqueKey({'email': email});
@@ -191,7 +215,8 @@ export class UserService {
         return false;
     }
 
-    private removePassword(user: User): User {
+    /*Checks if the object is a valid user and if so returns a user object without the password*/
+    removePassword(user: User): User {
         if(!user || !user.password) return user;
         let usr = {...user};
         delete usr.password;

@@ -1,6 +1,5 @@
 import { isValidId, isValidStrings, isValidObject, isPropertyOf } from "../util/validator";
 import { User } from "../models/user";
-import { Post } from "../models/post";
 
 describe('validator', () => {
 
@@ -109,14 +108,12 @@ describe('validator', () => {
     test('should return true when isValidObject is provided valid object with no nullable props', () => {
 
         // Arrange
-        expect.assertions(2);
+        expect.assertions(1);
 
         // Act
-        let result1 = isValidObject(new Post(1, 'title', 'body', 1));
         let result2 = isValidObject(new User(1, 'username', 'password', 'first', 'last', 'email', 'role'));
 
         // Assert
-        expect(result1).toBe(true);
         expect(result2).toBe(true);
 
     });
@@ -124,14 +121,12 @@ describe('validator', () => {
     test('should return true when isValidObject is provided valid object with nullable prop(s)', () => {
 
         // Arrange
-        expect.assertions(2);
+        expect.assertions(1);
 
         // Act
-        let result1 = isValidObject(new Post(0, 'title', 'body', 1), 'id');
         let result2 = isValidObject(new User(0, 'username', 'password', 'first', 'last', 'email', 'role'), 'id');
 
         // Assert
-        expect(result1).toBe(true);
         expect(result2).toBe(true);
 
     });
@@ -139,14 +134,12 @@ describe('validator', () => {
     test('should return false when isValidObject is provided invalid object with no nullable prop(s)', () => {
 
         // Arrange
-        expect.assertions(2);
+        expect.assertions(1);
 
         // Act
-        let result1 = isValidObject(new Post(1, '', 'body', 1));
         let result2 = isValidObject(new User(1, 'username', 'password', '', 'last', 'email', 'role'));
 
         // Assert
-        expect(result1).toBe(false);
         expect(result2).toBe(false);
 
     });
@@ -154,14 +147,12 @@ describe('validator', () => {
     test('should return false when isValidObject is provided invalid object with some nullable prop(s)', () => {
 
         // Arrange
-        expect.assertions(2);
+        expect.assertions(1);
 
         // Act
-        let result1 = isValidObject(new Post(1, '', 'body', 1), 'id');
         let result2 = isValidObject(new User(1, 'username', 'password', '', 'last', 'email', 'role'), 'id');
 
         // Assert
-        expect(result1).toBe(false);
         expect(result2).toBe(false);
 
     });
@@ -169,34 +160,30 @@ describe('validator', () => {
     test('should return true when isPropertyOf is provided a known property of a given constructable type', () => {
 
         // Arrange
-        expect.assertions(3);
+        expect.assertions(2);
 
         // Act
         let result1 = isPropertyOf('id', User);
         let result2 = isPropertyOf('username', User);
-        let result3 = isPropertyOf('title', Post);
 
         // Assert
         expect(result1).toBe(true);
         expect(result2).toBe(true);
-        expect(result3).toBe(true);
 
     });
 
     test('should return false when isPropertyOf is provided a unknown property of a given constructable type', () => {
 
         // Arrange
-        expect.assertions(3);
+        expect.assertions(2);
 
         // Act
         let result1 = isPropertyOf('not-real', User);
         let result2 = isPropertyOf('fake', User);
-        let result3 = isPropertyOf('titl', Post);
 
         // Assert
         expect(result1).toBe(false);
         expect(result2).toBe(false);
-        expect(result3).toBe(false);
 
     });
 
