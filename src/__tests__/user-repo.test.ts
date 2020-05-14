@@ -127,7 +127,7 @@ describe('userRepo', () => {
         let mockUser = new User(1, 'username', 'password', 'first', 'last','email', 'locked');
         (mockMapper.mapUserResultSet as jest.Mock).mockReturnValue(mockUser);
 
-        let result = await sut.getUserByUniqueKey('username', 'un');
+        let result = await sut.getUserByUniqueKey('username', 'username');
 
         expect(result).toBeTruthy();
         expect(result instanceof User).toBe(true);
@@ -180,4 +180,3 @@ describe('userRepo', () => {
         expect(result).toBeTruthy();
     });
 });
-
