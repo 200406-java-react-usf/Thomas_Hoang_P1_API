@@ -121,7 +121,7 @@ describe('reimbRepo', () => {
         
         (mockMapper.mapReimbResultSet as jest.Mock).mockReturnValue(mockReimb);
 
-        let result = await sut.getUserByUniqueKey('submitted', 'un');
+        let result = await sut.getReimbByUniqueKey('submitted', 'un');
 
         expect(result).toBeTruthy();
         expect(result instanceof Array).toBe(true);

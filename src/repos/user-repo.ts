@@ -63,7 +63,7 @@ export class UserRepository implements CrudRepository<User> {
     }
 
     /*Returns a user by defining what the user is being searched by and the actual value of that search */
-    async getUserByUniqueKey(key: string, val: string): Promise<User[]> {
+    async getUserByUniqueKey(key: string, val: string): Promise<User> {
 
         let client: PoolClient;
 
@@ -71,7 +71,7 @@ export class UserRepository implements CrudRepository<User> {
             client = await connectionPool.connect();
             let sql = `${this.baseQuery} where au.${key} = $1`;
             let rs = await client.query(sql, [val]);
-            return rs.rows.map(mapUserResultSet);
+            return mapUserResultSet(rs.rows[0]);
         } catch (e) {
             throw new InternalServerError();
         } finally {
