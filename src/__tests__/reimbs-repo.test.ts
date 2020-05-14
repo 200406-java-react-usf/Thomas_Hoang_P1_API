@@ -49,10 +49,11 @@ describe('reimbRepo', () => {
                 release: jest.fn()
             }
         });
-        (mockMapper.mapUserResultSet as jest.Mock).mockClear();
+        (mockMapper.mapReimbResultSet as jest.Mock).mockClear();
     });
 
-    let mockReimb = new Reimb(1, 152.25, '2020-04-15 18:50:10', '2020-05-12 20:00:55', 'A reimbursement for lodging', '', 'Alice', 'Anderson', 'Bill', 'Bob', 'Pending', 'Lodging');
+    let mockReimb = new Reimb(5, 152.25, '2020-04-15 18:50:10', '2020-05-12 20:00:55', 'A reimbursement for lodging', 'RandomURLLink', 'Alice', 'Anderson', 'Bill', 'Bob', 'Pending', 'Lodging');
+    
     test('should resolve to an array of reimbursements when getAll retrieves records from data source', async () => {
         
         expect.hasAssertions();
@@ -121,7 +122,7 @@ describe('reimbRepo', () => {
         
         (mockMapper.mapReimbResultSet as jest.Mock).mockReturnValue(mockReimb);
 
-        let result = await sut.getReimbByUniqueKey('submitted', 'un');
+        let result = await sut.getReimbByUniqueKey('submitted', '2020-04-15 18:50:10');
 
         expect(result).toBeTruthy();
         expect(result instanceof Array).toBe(true);
