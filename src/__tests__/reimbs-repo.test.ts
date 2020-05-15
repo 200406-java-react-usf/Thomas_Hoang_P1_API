@@ -52,7 +52,7 @@ describe('reimbRepo', () => {
         (mockMapper.mapReimbResultSet as jest.Mock).mockClear();
     });
 
-    let mockReimb = new Reimb(5, 152.25, '2020-04-15 18:50:10', '2020-05-12 20:00:55', 'A reimbursement for lodging', 'RandomURLLink', 'Alice', 'Anderson', 'Bill', 'Bob', 'Pending', 'Lodging');
+    let mockReimb = new Reimb(5, 152.25, '2020-04-15 18:50:10', '2020-05-12 20:00:55', 'A reimbursement for lodging', 'RandomURLLink', 'Alice', 'Anderson', 'Bill', 'Bob', 'Approved', 'Lodging');
     
     test('should resolve to an array of reimbursements when getAll retrieves records from data source', async () => {
         
@@ -125,8 +125,7 @@ describe('reimbRepo', () => {
         let result = await sut.getReimbByUniqueKey('submitted', '2020-04-15 18:50:10');
 
         expect(result).toBeTruthy();
-        expect(result instanceof Array).toBe(true);
-        expect(result.length).toBe(1);
+        expect(result instanceof Reimb).toBe(true);
     });
 
     test('should resolve to a reimb object if save returns a valid user', async () => {

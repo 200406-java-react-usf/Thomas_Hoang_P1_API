@@ -72,7 +72,7 @@ export class ReimbRepository implements CrudRepository<Reimb> {
     }
 
     /*Searches for reimbursements by a given key and value for the key*/
-    async getReimbByUniqueKey(key: string, val: string): Promise<Reimb[]> {
+    async getReimbByUniqueKey(key: string, val: string): Promise<Reimb> {
 
         let client: PoolClient;
 
@@ -80,7 +80,7 @@ export class ReimbRepository implements CrudRepository<Reimb> {
             client = await connectionPool.connect();
             let sql = `${this.baseQuery} where ${key} = $1`;
             let rs = await client.query(sql, [val]);
-            return rs.rows.map(mapReimbResultSet);
+            return mapReimbResultSet(rs.rows[0]);
         } catch (e) {
             throw new InternalServerError();
         } finally {
@@ -108,7 +108,7 @@ export class ReimbRepository implements CrudRepository<Reimb> {
             `;
 
             let rs = await client.query(sql, [newReimb.amount, newReimb.submitted, newReimb.description, newReimb.receipt, authorID, resolverID, statusID, typeID]);
-            newReimb = rs.rows[0].id;
+            newReimb.reimb_id = rs.rows[0].id;
             return newReimb;
         } catch (e) {
             console.log(e);
@@ -118,7 +118,8 @@ export class ReimbRepository implements CrudRepository<Reimb> {
         }
     }
 
-    /*Updates the status of a reimbursment and sets the resolved time to the current time*/
+    /*Updates the status of a reimbursment and sets the resolved time to the current time if status is approved or denied
+    otherwise updates the amount, description, receipt, and type if the status is pending.*/
     async update(updatedReimb: Reimb): Promise<boolean> {
 
         let client: PoolClient;
@@ -127,14 +128,27 @@ export class ReimbRepository implements CrudRepository<Reimb> {
             client = await connectionPool.connect();
             /*SQL Query to change data to proper data field*/
             let statusID = (await client.query('select reimb_status_id from ers_reimbursement_statuses where reimb_status = $1', [updatedReimb.status])).rows[0].id;
+            let typeID = (await client.query('select reimb_type_id from ers_reimbursement_types where reimb_type = $1', [updatedReimb.type])).rows[0].id;
 
-            let sql = `
-                update ers_reimbursements set (reimb_status_id, resolved) = ($2, now()) where reimb_id = $1
-            `;
+            console.log(updatedReimb.status);
+            console.log(statusID);
+            if (statusID == 2 || statusID == 3){
+                let sql = `
+                    update ers_reimbursements set (reimb_status_id, resolved) = ($2, now()) where reimb_id = $1
+                `;
 
-            let rs = await client.query(sql, [statusID, updatedReimb.reimb_id]);
-            updatedReimb = rs.rows[0].id;
-            return true;
+                let rs = await client.query(sql, [updatedReimb.reimb_id, statusID]);
+                updatedReimb.reimb_id = rs.rows[0].id;
+                return true;
+            }else if (statusID == 1){
+                let sql = `
+                    update ers_reimbursements set (amount, description, receipt, reimb_type_id) = ($2, $3, $4, $5) where reimb_id = $1
+                `
+                
+                let rs = await client.query(sql, [updatedReimb.reimb_id, updatedReimb.amount, updatedReimb.description, updatedReimb.receipt, typeID]);
+                updatedReimb.reimb_id = rs.rows[0].id;
+                return true;
+            }
         }catch (e) {
             throw new InternalServerError();
         }finally {
