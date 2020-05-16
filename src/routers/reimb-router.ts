@@ -29,7 +29,7 @@ ReimbRouter.get('', adminGuard, async (req, resp) => {
 
 });
 
-ReimbRouter.get('/:id', adminGuard, async (req, resp) => {
+ReimbRouter.get('/:ers_user_id', adminGuard, async (req, resp) => {
     const id = +req.params.id;
     try {
         let payload = await reimbService.getReimbByID(id);
