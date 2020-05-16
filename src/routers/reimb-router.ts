@@ -3,13 +3,13 @@ import express from 'express';
 import AppConfig from '../config/app';
 import { isEmptyObject } from '../util/validator';
 import { ParsedUrlQuery } from 'querystring';
-import { adminGuard } from '../middleware/auth-middleware';
+import { adminGuard,  managerGuard, empGuard } from '../middleware/auth-middleware';
 
 export const ReimbRouter = express.Router();
 
 const reimbService = AppConfig.reimbService;
 
-ReimbRouter.get('', adminGuard, async (req, resp) => {
+ReimbRouter.get('', managerGuard, async (req, resp) => {
 
     try {
 
@@ -29,7 +29,7 @@ ReimbRouter.get('', adminGuard, async (req, resp) => {
 
 });
 
-ReimbRouter.get('/:ers_user_id', adminGuard, async (req, resp) => {
+ReimbRouter.get('/:ers_user_id', managerGuard, async (req, resp) => {
     const id = +req.params.id;
     try {
         let payload = await reimbService.getReimbByID(id);
@@ -39,7 +39,7 @@ ReimbRouter.get('/:ers_user_id', adminGuard, async (req, resp) => {
     }
 });
 
-ReimbRouter.post('', adminGuard, async (req, resp) => {
+ReimbRouter.post('', managerGuard, async (req, resp) => {
 
     console.log('POST REQUEST RECEIVED AT /reimb');
     console.log(req.body);
@@ -52,7 +52,7 @@ ReimbRouter.post('', adminGuard, async (req, resp) => {
 
 });
 
-ReimbRouter.put('', adminGuard, async (req, resp) => {
+ReimbRouter.put('', managerGuard, async (req, resp) => {
 
     console.log('PUT REQUEST RECEIVED AT /reimb');
     console.log(req.body);
@@ -65,7 +65,7 @@ ReimbRouter.put('', adminGuard, async (req, resp) => {
 
 });
 
-ReimbRouter.delete('', adminGuard, async (req, resp) => {
+ReimbRouter.delete('', managerGuard, async (req, resp) => {
 
     console.log('DELETE REQUEST RECEIVED AT /reimb');
     console.log(req.body);

@@ -25,3 +25,16 @@ export const managerGuard = (req: Request, resp: Response, next) => {
     }
 
 }
+
+/*Checks if the logged in user is a Employee*/
+export const empGuard = (req: Request, resp: Response, next) => {
+
+    if (!req.session.principal) {
+        resp.status(401).json(new AuthenticationError('No session found! Please login.'));
+    } else if (req.session.principal.role === 'Employee') {
+        next();
+    } else {
+        resp.status(403).json(new AuthorizationError());
+    }
+
+}
