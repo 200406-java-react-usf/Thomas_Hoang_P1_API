@@ -9,7 +9,7 @@ export function mapUserResultSet(resultSet: UserSchema): User {
     }
 
     return new User(
-        resultSet.id,
+        resultSet.ers_user_id,
         resultSet.username,
         resultSet.password,
         resultSet.first_name,
@@ -36,7 +36,7 @@ export function mapReimbResultSet(resultSet: ReimbSchema): Reimb {
         resultSet.author_last,
         resultSet.resolver_first,
         resultSet.resolver_last,
-        resultSet.status,
-        resultSet.type
+        resultSet.reimb_status,
+        resultSet.reimb_type
     );
 }

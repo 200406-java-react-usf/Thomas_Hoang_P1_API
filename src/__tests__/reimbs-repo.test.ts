@@ -52,7 +52,7 @@ describe('reimbRepo', () => {
         (mockMapper.mapReimbResultSet as jest.Mock).mockClear();
     });
 
-    let mockReimb = new Reimb(5, 152.25, '2020-04-15 18:50:10', '2020-05-12 20:00:55', 'A reimbursement for lodging', 'RandomURLLink', 'Alice', 'Anderson', 'Bill', 'Bob', 'Approved', 'Lodging');
+    let mockReimb = new Reimb(1, 152.25, '2020-04-15 18:50:10', '2020-05-12 20:00:55', 'A reimbursement for lodging', 'RandomURLLink', 'Alice', 'Anderson', 'Bill', 'Bob', 'Denied', 'Lodging');
     
     test('should resolve to an array of reimbursements when getAll retrieves records from data source', async () => {
         

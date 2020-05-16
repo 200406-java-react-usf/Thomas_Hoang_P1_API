@@ -1,5 +1,5 @@
 export interface UserSchema {
-    id: number,
+    ers_user_id: number,
     username: string,
     password: string,
     first_name: string,
@@ -19,6 +19,6 @@ export interface ReimbSchema{
     author_last: string,
     resolver_first: string,
     resolver_last: string,
-    status: string,
-    type: string
+    reimb_status: string,
+    reimb_type: string
 }

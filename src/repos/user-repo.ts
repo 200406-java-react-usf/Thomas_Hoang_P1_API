@@ -50,7 +50,7 @@ export class UserRepository implements CrudRepository<User> {
 
         try {
             client = await connectionPool.connect();
-            let sql = `${this.baseQuery} where au.id = $1`;
+            let sql = `${this.baseQuery} where au.ers_user_id = $1`;
             let rs = await client.query(sql, [id]);
             return mapUserResultSet(rs.rows[0]);
         } catch (e) {
@@ -108,16 +108,16 @@ export class UserRepository implements CrudRepository<User> {
             client = await connectionPool.connect();
 
             //DB call to find the role id of the role the user has
-            let roleId = (await client.query('select id from user_roles where name = $1', [newUser.role])).rows[0].id;
+            let roleId = (await client.query('select ers_user_id from user_roles where name = $1', [newUser.role_name])).rows[0].ers_user_id;
             
             let sql = `
-                insert into app_users (username, password, first_name, last_name, email, role_id) 
-                values ($1, $2, $3, $4, $5, $6) returning id
+                insert into ers_users (username, password, first_name, last_name, email, role_id) 
+                values ($1, $2, $3, $4, $5, $6) returning ers_user_id
             `;
 
-            let rs = await client.query(sql, [newUser.username, newUser.password, newUser.firstName, newUser.lastName, newUser.email, roleId]);
+            let rs = await client.query(sql, [newUser.username, newUser.password, newUser.first_name, newUser.last_name, newUser.email, roleId]);
             
-            newUser.id = rs.rows[0].id;
+            newUser.ers_user_id = rs.rows[0].ers_user_id;
             
             return newUser;
 
@@ -137,8 +137,8 @@ export class UserRepository implements CrudRepository<User> {
 
         try {
             client = await connectionPool.connect();
-            let sql = `update users set (username, password, email) = ($2, $3, $4) where id = $1;`;
-            await client.query(sql, [updatedUser.id, updatedUser.username, updatedUser.password, updatedUser.email]);
+            let sql = `update ers_users set (username, password, email) = ($2, $3, $4) where ers_user_id = $1;`;
+            await client.query(sql, [updatedUser.ers_user_id, updatedUser.username, updatedUser.password, updatedUser.email]);
             return true;
         } catch (e) {
             throw new InternalServerError();
@@ -155,7 +155,7 @@ export class UserRepository implements CrudRepository<User> {
 
         try {
             client = await connectionPool.connect();
-            let sql =  `delete from users where id = $1;`;
+            let sql =  `delete from ers_users where ers_user_id = $1;`;
             await client.query(sql, [id]);
             return true;
         } catch (e) {

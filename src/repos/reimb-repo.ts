@@ -24,8 +24,8 @@ export class ReimbRepository implements CrudRepository<Reimb> {
             u.last_name as author_last,
             u2.first_name as resolver_first,
             u2.last_name as resolver_last,
-            s.reimb_status as status,
-            t.reimb_type as type
+            s.reimb_status as reimb_status,
+            t.reimb_type as reimb_type
         from ers_reimbursements er 
         inner join ers_users u
         on er.author_id = u.ers_user_id 
@@ -98,9 +98,9 @@ export class ReimbRepository implements CrudRepository<Reimb> {
             /*Defaulting the status to 1(pending) because each new reimbursement should not be resolved yet.*/
             let statusID = 1;
             /*SQL Query to change data to proper data field*/
-            let authorID = (await client.query('select ers_user_id from ers_users where (first_name, last_name) = ($1,$2)', [newReimb.author_first, newReimb.author_last])).rows[0].id;
-            let resolverID = (await client.query('select ers_user_id from ers_users where (first_name, last_name) = ($1,$2)', [newReimb.resolver_first, newReimb.resolver_last])).rows[0].id;
-            let typeID = (await client.query('select reimb_type_id from ers_reimbursement_types where reimb_type = $1', [newReimb.type])).rows[0].id;
+            let authorID = (await client.query('select ers_user_id from ers_users where (first_name, last_name) = ($1,$2)', [newReimb.author_first, newReimb.author_last])).rows[0].ers_user_id;
+            let resolverID = (await client.query('select ers_user_id from ers_users where (first_name, last_name) = ($1,$2)', [newReimb.resolver_first, newReimb.resolver_last])).rows[0].ers_user_id;
+            let typeID = (await client.query('select reimb_type_id from ers_reimbursement_types where reimb_type = $1', [newReimb.reimb_type])).rows[0].reimb_type_id;
 
             let sql = `
                 insert into ers_reimbursements (amount, submitted, description, receipt, author_id, resolver_id, reimb_status_id, reimb_type_id) 
@@ -108,10 +108,9 @@ export class ReimbRepository implements CrudRepository<Reimb> {
             `;
 
             let rs = await client.query(sql, [newReimb.amount, newReimb.submitted, newReimb.description, newReimb.receipt, authorID, resolverID, statusID, typeID]);
-            newReimb.reimb_id = rs.rows[0].id;
+            newReimb.reimb_id = rs.rows[0].reimb_id;
             return newReimb;
         } catch (e) {
-            console.log(e);
             throw new InternalServerError();
         } finally {
             client && client.release();
@@ -127,26 +126,22 @@ export class ReimbRepository implements CrudRepository<Reimb> {
         try {
             client = await connectionPool.connect();
             /*SQL Query to change data to proper data field*/
-            let statusID = (await client.query('select reimb_status_id from ers_reimbursement_statuses where reimb_status = $1', [updatedReimb.status])).rows[0].id;
-            let typeID = (await client.query('select reimb_type_id from ers_reimbursement_types where reimb_type = $1', [updatedReimb.type])).rows[0].id;
+            let statusID = (await client.query('select reimb_status_id from ers_reimbursement_statuses where reimb_status = $1', [updatedReimb.reimb_status])).rows[0].reimb_status_id;
+            let typeID = (await client.query('select reimb_type_id from ers_reimbursement_types where reimb_type = $1', [updatedReimb.reimb_type])).rows[0].reimb_type_id;
 
-            console.log(updatedReimb.status);
-            console.log(statusID);
             if (statusID == 2 || statusID == 3){
                 let sql = `
                     update ers_reimbursements set (reimb_status_id, resolved) = ($2, now()) where reimb_id = $1
                 `;
 
-                let rs = await client.query(sql, [updatedReimb.reimb_id, statusID]);
-                updatedReimb.reimb_id = rs.rows[0].id;
+                await client.query(sql, [updatedReimb.reimb_id, statusID]);
                 return true;
             }else if (statusID == 1){
                 let sql = `
                     update ers_reimbursements set (amount, description, receipt, reimb_type_id) = ($2, $3, $4, $5) where reimb_id = $1
                 `
                 
-                let rs = await client.query(sql, [updatedReimb.reimb_id, updatedReimb.amount, updatedReimb.description, updatedReimb.receipt, typeID]);
-                updatedReimb.reimb_id = rs.rows[0].id;
+                await client.query(sql, [updatedReimb.reimb_id, updatedReimb.amount, updatedReimb.description, updatedReimb.receipt, typeID]);
                 return true;
             }
         }catch (e) {
@@ -164,7 +159,7 @@ export class ReimbRepository implements CrudRepository<Reimb> {
         try {
             client = await connectionPool.connect();
             let sql = `delete from ers_reimbursements where reimb_id = $1;`;
-            let rs = await client.query(sql, [id]);  
+            await client.query(sql, [id]);  
             return true;
         }catch (e) {
             throw new InternalServerError();
