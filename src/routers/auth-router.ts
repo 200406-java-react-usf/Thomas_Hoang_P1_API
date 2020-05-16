@@ -17,7 +17,7 @@ AuthRouter.post('', async (req, resp) => {
 
         const { username, password } = req.body;
         let authUser = await userService.authenticateUser(username, password);
-        let payload = new Principal(authUser.id, authUser.username, authUser.role);
+        let payload = new Principal(authUser.ers_user_id, authUser.username, authUser.role_name);
         req.session.principal = payload;
         resp.status(200).json(payload);
         
