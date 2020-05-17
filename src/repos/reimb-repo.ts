@@ -98,16 +98,15 @@ export class ReimbRepository implements CrudRepository<Reimb> {
             /*Defaulting the status to 1(pending) because each new reimbursement should not be resolved yet.*/
             let statusID = 1;
             /*SQL Query to change data to proper data field*/
-            let authorID = (await client.query('select ers_user_id from ers_users where (first_name, last_name) = ($1,$2)', [newReimb.author_first, newReimb.author_last])).rows[0].ers_user_id;
             let resolverID = (await client.query('select ers_user_id from ers_users where (first_name, last_name) = ($1,$2)', [newReimb.resolver_first, newReimb.resolver_last])).rows[0].ers_user_id;
             let typeID = (await client.query('select reimb_type_id from ers_reimbursement_types where reimb_type = $1', [newReimb.reimb_type])).rows[0].reimb_type_id;
 
             let sql = `
-                insert into ers_reimbursements (amount, submitted, description, receipt, author_id, resolver_id, reimb_status_id, reimb_type_id) 
-                values ($1, $2, $3, $4, $5, $6, $7, $8) returning reimb_id
+                insert into ers_reimbursements (amount, submitted, description, receipt, resolver_id, reimb_status_id, reimb_type_id) 
+                values ($1, now(), $2, $3, $4, $5, $6) returning reimb_id
             `;
 
-            let rs = await client.query(sql, [newReimb.amount, newReimb.submitted, newReimb.description, newReimb.receipt, authorID, resolverID, statusID, typeID]);
+            let rs = await client.query(sql, [newReimb.amount, newReimb.description, newReimb.receipt, resolverID, statusID, typeID]);
             newReimb.reimb_id = rs.rows[0].reimb_id;
             return newReimb;
         } catch (e) {
