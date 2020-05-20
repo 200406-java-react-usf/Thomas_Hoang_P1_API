@@ -18,6 +18,19 @@ export class ReimbService {
         }
         return reimbes;
     }
+
+    async getAllByUserID(id: number): Promise<Reimb[]> {
+        if (!isValidId(id)) {
+            throw new BadRequestError();
+        }
+
+        let reimbes = await this.reimbRepo.getAll();
+        if (reimbes.length == 0) {
+            throw new ResourceNotFoundError();
+        }
+        return reimbes;
+    }
+
     async getReimbByID(id: number): Promise<Reimb> {
         if (!isValidId(id)) {
             throw new BadRequestError();
