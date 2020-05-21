@@ -88,6 +88,21 @@ describe('reimbRepo', () => {
 
     });
 
+    test('should resolve to an array of reimbursements when getAllByUserID retrieves records from data source', async () => {
+        
+        expect.hasAssertions();
+
+        (mockMapper.mapReimbResultSet as jest.Mock).mockReturnValue(mockReimb);
+
+        let result = await sut.getAllByUserID(1);
+
+        expect(result).toBeTruthy();
+        expect(result instanceof Array).toBe(true);
+        expect(result.length).toBe(1);
+        expect(mockConnect).toBeCalledTimes(1);
+
+    });
+
     test('should resolve to a Reimb object when getById retrieves a record from data source', async () => {
 
         expect.hasAssertions();
