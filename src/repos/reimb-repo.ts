@@ -73,40 +73,6 @@ export class ReimbRepository implements CrudRepository<Reimb> {
             }
         }
 
-    /*Gets a reimbursement by the reimbursement's id*/
-    async getById(id: number): Promise<Reimb> {
-
-        let client: PoolClient;
-
-        try {
-            client = await connectionPool.connect();
-            let sql = `${this.baseQuery} where reimb_id = $1`;
-            let rs = await client.query(sql, [id]);
-            return mapReimbResultSet(rs.rows[0])
-        }catch (e) {
-            throw new InternalServerError();
-        }finally {
-            client && client.release();
-        }
-    }
-
-    /*Searches for reimbursements by a given key and value for the key*/
-    async getReimbByUniqueKey(key: string, val: string): Promise<Reimb> {
-
-        let client: PoolClient;
-
-        try {
-            client = await connectionPool.connect();
-            let sql = `${this.baseQuery} where ${key} = $1`;
-            let rs = await client.query(sql, [val]);
-            return mapReimbResultSet(rs.rows[0]);
-        } catch (e) {
-            throw new InternalServerError();
-        } finally {
-            client && client.release();
-        }
-    }
-
     /*Function takes in information for a new reimbursement to add a new pending reimbursement*/
     async save(newReimb: Reimb): Promise<Reimb> {
             

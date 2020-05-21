@@ -31,40 +31,6 @@ export class ReimbService {
         return reimbes;
     }
 
-    async getReimbByID(id: number): Promise<Reimb> {
-        if (!isValidId(id)) {
-            throw new BadRequestError();
-        }
-        let reimb = await this.reimbRepo.getById(id);
-        if (isEmptyObject(reimb)) {
-            throw new ResourceNotFoundError();
-        }
-        return reimb;
-    }
-    async getReimbByUniqueKey(queryObj: any): Promise<Reimb> {
-        try {
-            let queryKeys = Object.keys(queryObj);
-            if (!queryKeys.every(key => isPropertyOf(key, Reimb))) {
-                throw new BadRequestError();
-            }
-            let key = queryKeys[0];
-            let val = queryObj[key];
-            if (key === 'id') {
-                return await this.getReimbByID(+val);
-            }
-            if (!isValidStrings(val)) {
-                throw new BadRequestError();
-            }
-            let reimbs = await this.reimbRepo.getReimbByUniqueKey(key, val);
-            if (isEmptyObject(reimbs)) {
-                throw new ResourceNotFoundError();
-            }
-            return reimbs;
-        }
-        catch (e) {
-            throw e;
-        }
-    }
     async addNewReimb(newReimb: Reimb): Promise<Reimb> {
         try {
             if (!isValidObject(newReimb, 'id')) {
