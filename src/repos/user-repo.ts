@@ -107,11 +107,12 @@ export class UserRepository implements CrudRepository<User> {
         try {
             client = await connectionPool.connect();
 
+            console.log(newUser);
             //DB call to find the role id of the role the user has
-            let roleId = (await client.query('select ers_user_id from user_roles where name = $1', [newUser.role_name])).rows[0].ers_user_id;
+            let roleId = (await client.query('select role_id from ers_user_roles where role_name = $1', [newUser.role_name])).rows[0].role_id;
             
             let sql = `
-                insert into ers_users (username, password, first_name, last_name, email, role_id) 
+                insert into ers_users (username, password, first_name, last_name, email, user_role_id) 
                 values ($1, $2, $3, $4, $5, $6) returning ers_user_id
             `;
 

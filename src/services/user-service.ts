@@ -133,7 +133,6 @@ export class UserService {
                 throw new  ResourcePersistenceError('The provided email is already taken.');
             }
 
-            newUser.role_name = 'User'; // all new registers have 'User' role by default
             const persistedUser = await this.userRepo.save(newUser);
 
             return this.removePassword(persistedUser);
