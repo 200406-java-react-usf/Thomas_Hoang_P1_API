@@ -12,16 +12,8 @@ const reimbService = AppConfig.reimbService;
 ReimbRouter.get('', async (req, resp) => {
 
     try {
-
-        let reqURL = url.parse(req.url, true);
-
-        if(!isEmptyObject<ParsedUrlQuery>(reqURL.query)) {
-            let payload = await reimbService.getReimbByUniqueKey({...reqURL.query});
-            resp.status(200).json(payload);
-        } else {
-            let payload = await reimbService.getAllReimbes();
-            resp.status(200).json(payload);
-        }
+        let payload = await reimbService.getAllReimbes();
+        resp.status(200).json(payload);
 
     } catch (e) {
         resp.status(e.statusCode).json(e);
