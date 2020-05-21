@@ -9,7 +9,7 @@ export const ReimbRouter = express.Router();
 
 const reimbService = AppConfig.reimbService;
 
-ReimbRouter.get('', (adminGuard || managerGuard), async (req, resp) => {
+ReimbRouter.get('', async (req, resp) => {
 
     try {
 
@@ -29,8 +29,8 @@ ReimbRouter.get('', (adminGuard || managerGuard), async (req, resp) => {
 
 });
 
-ReimbRouter.get('/author_id', (adminGuard || managerGuard), async (req, resp) => {
-    const id = req.body;
+ReimbRouter.get('/author_id', async (req, resp) => {
+    const id = +req.params.author_id;
     try {
         let payload = await reimbService.getAllByUserID(id);
         return resp.status(200).json(payload);
@@ -39,7 +39,7 @@ ReimbRouter.get('/author_id', (adminGuard || managerGuard), async (req, resp) =>
     }
 });
 
-ReimbRouter.post('', (adminGuard || managerGuard), async (req, resp) => {
+ReimbRouter.post('', async (req, resp) => {
 
     console.log('POST REQUEST RECEIVED AT /reimb');
     console.log(req.body);
@@ -52,7 +52,7 @@ ReimbRouter.post('', (adminGuard || managerGuard), async (req, resp) => {
 
 });
 
-ReimbRouter.put('', (adminGuard || managerGuard), async (req, resp) => {
+ReimbRouter.put('', async (req, resp) => {
 
     console.log('PUT REQUEST RECEIVED AT /reimb');
     console.log(req.body);
@@ -65,16 +65,15 @@ ReimbRouter.put('', (adminGuard || managerGuard), async (req, resp) => {
 
 });
 
-ReimbRouter.delete('', (adminGuard || managerGuard), async (req, resp) => {
 
+ReimbRouter.delete('/reimb_id', async (req, resp) => {
+    const id = +req.params.reimb_id;
     console.log('DELETE REQUEST RECEIVED AT /reimb');
-    console.log(req.body);
     try {
-        let deletedUser = await reimbService.deleteByID(+req.body.id);
-        return resp.status(201).json(deletedUser);
+        let payload = await reimbService.deleteByID(id);
+        return resp.status(201).json(payload);
     } catch (e) {
         return resp.status(e.statusCode).json(e);
     }
-
 });
 

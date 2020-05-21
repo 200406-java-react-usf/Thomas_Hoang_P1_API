@@ -30,7 +30,7 @@ UserRouter.get('', async (req, resp) => {
 });
 
 UserRouter.get('/:ers_user_id', async (req, resp) => {
-    const id = +req.params.id;
+    const id = +req.params.ers_user_id;
     try {
         let payload = await userService.getUserById(id);
         return resp.status(200).json(payload);
@@ -65,16 +65,14 @@ UserRouter.put('', async (req, resp) => {
 
 });
 
-UserRouter.delete('', async (req, resp) => {
 
+UserRouter.delete('/:ers_user_id', async (req, resp) => {
+    const id = +req.params.ers_user_id;
     console.log('DELETE REQUEST RECEIVED AT /users');
-    console.log(req.body);
     try {
-        let deletedUser = await userService.deleteById(+req.body.id);
-        return resp.status(201).json(deletedUser);
+        let payload = await userService.deleteById(id);
+        return resp.status(201).json(payload);
     } catch (e) {
         return resp.status(e.statusCode).json(e);
     }
-
 });
-
