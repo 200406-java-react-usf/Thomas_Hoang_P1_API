@@ -103,46 +103,6 @@ describe('reimbRepo', () => {
 
     });
 
-    test('should resolve to a Reimb object when getById retrieves a record from data source', async () => {
-
-        expect.hasAssertions();
-
-        (mockMapper.mapReimbResultSet as jest.Mock).mockReturnValue(mockReimb);
-
-        let result = await sut.getById(1);
-
-        expect(result).toBeTruthy();
-        expect(result instanceof Reimb).toBe(true);
-
-    });
-    test('should resolve to an invalid object when getById retrieves no record from data source', async () => {
-        expect.hasAssertions();
-
-        (mockConnect as jest.Mock).mockImplementation(() => {
-            return {
-                query: jest.fn().mockImplementation(() => { return { rows: [] } }), 
-                release: jest.fn()
-            }
-        });
-
-        let result = await sut.getById(9996);
-
-        expect(result).toBeTruthy();
-        expect(result instanceof Reimb).toBe(true);
-        expect(mockConnect).toBeCalledTimes(1);
-    });
-
-    test('Should resolve to an array of Reimb objects when getReimbByUniqueKey retrieves the records given a valid unique key.', async () => {
-        expect.hasAssertions();
-        
-        (mockMapper.mapReimbResultSet as jest.Mock).mockReturnValue(mockReimb);
-
-        let result = await sut.getReimbByUniqueKey('submitted', '2020-04-15 18:50:10');
-
-        expect(result).toBeTruthy();
-        expect(result instanceof Reimb).toBe(true);
-    });
-
     test('should resolve to a reimb object if save returns a valid reimb', async () => {
         expect.hasAssertions();
 

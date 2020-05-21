@@ -80,8 +80,6 @@ export class ReimbRepository implements CrudRepository<Reimb> {
 
         try {
             client = await connectionPool.connect();
-            newReimb.reimb_id = 22;
-            console.log(newReimb);
             /*Defaulting the status to 1(pending) because each new reimbursement should not be resolved yet.*/
             let statusID = 1;
             /*SQL Query to change data to proper data field*/
