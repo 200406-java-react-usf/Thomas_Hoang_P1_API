@@ -104,7 +104,7 @@ describe('userService', () => {
 
         // Assert
         expect(result).toBeTruthy();
-        expect(result.id).toBe(1);
+        expect(result.ers_user_id).toBe(1);
         expect(result.password).toBeUndefined();
 
     });
@@ -204,7 +204,7 @@ describe('userService', () => {
 
         // Assert
         expect(result).toBeTruthy();
-        expect(result.id).toBe(1);
+        expect(result.ers_user_id).toBe(1);
         expect(result.password).toBeUndefined();
     });
 
@@ -258,7 +258,7 @@ describe('userService', () => {
         let result = await sut.addNewUser(mockUser);
 
         expect(result).toBeTruthy();
-        expect(result.id).toBe(1);
+        expect(result.ers_user_id).toBe(1);
         expect(result.password).toBeUndefined();
     });
 

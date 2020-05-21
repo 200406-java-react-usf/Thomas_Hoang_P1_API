@@ -124,7 +124,7 @@ describe('validator', () => {
         expect.assertions(1);
 
         // Act
-        let result2 = isValidObject(new User(0, 'username', 'password', 'first', 'last', 'email', 'role'), 'id');
+        let result2 = isValidObject(new User(0, 'username', 'password', 'first', 'last', 'email', 'role'), 'ers_user_id');
 
         // Assert
         expect(result2).toBe(true);
@@ -163,7 +163,7 @@ describe('validator', () => {
         expect.assertions(2);
 
         // Act
-        let result1 = isPropertyOf('id', User);
+        let result1 = isPropertyOf('ers_user_id', User);
         let result2 = isPropertyOf('username', User);
 
         // Assert

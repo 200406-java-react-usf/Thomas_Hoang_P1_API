@@ -8,6 +8,7 @@ import { Pool } from 'pg';
 import { sessionMiddleware } from './middleware/session-middleware';
 import { corsFilter } from './middleware/cors-filter';
 import { UserRouter } from './routers/user-router';
+import { ReimbRouter } from './routers/reimb-router';
 import { AuthRouter } from './routers/auth-router';
 
 /*Environment Configuration*/
@@ -34,6 +35,7 @@ app.use(sessionMiddleware);
 app.use(corsFilter);
 app.use('/', express.json());
 app.use('/users', UserRouter);
+app.use('/reimbs', ReimbRouter);
 app.use('/auth', AuthRouter);
 
 app.listen(8080, () => {
