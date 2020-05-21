@@ -114,16 +114,16 @@ describe('reimbRepo', () => {
         expect(result instanceof Reimb).toBe(true);
     });
 
-    test('should resolve to true if updates a valid id', async () => {
-        expect.hasAssertions();
+    // test('should resolve to true if updates a valid id', async () => {
+    //     expect.hasAssertions();
 
-        (mockMapper.mapReimbResultSet as jest.Mock).mockReturnValue(mockReimb);
+    //     (mockMapper.mapReimbResultSet as jest.Mock).mockReturnValue(mockReimb);
 
 
-        let result = await sut.update(mockReimb);
+    //     let result = await sut.update(mockReimb);
 
-        expect(result).toBeTruthy();
-    });
+    //     expect(result).toBeTruthy();
+    // });
 
     test('Should resolve to true when deleteById deletes a valid reimb object', async () => {
         expect.hasAssertions();
