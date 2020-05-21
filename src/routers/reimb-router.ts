@@ -29,7 +29,7 @@ ReimbRouter.get('', async (req, resp) => {
 
 });
 
-ReimbRouter.get('/author_id', async (req, resp) => {
+ReimbRouter.get('/:author_id', async (req, resp) => {
     const id = +req.params.author_id;
     try {
         let payload = await reimbService.getAllByUserID(id);
@@ -41,7 +41,7 @@ ReimbRouter.get('/author_id', async (req, resp) => {
 
 ReimbRouter.post('', async (req, resp) => {
 
-    console.log('POST REQUEST RECEIVED AT /reimb');
+    console.log('POST REQUEST RECEIVED AT /reimbs');
     console.log(req.body);
     try {
         let newUser = await reimbService.addNewReimb(req.body);
@@ -54,7 +54,7 @@ ReimbRouter.post('', async (req, resp) => {
 
 ReimbRouter.put('', async (req, resp) => {
 
-    console.log('PUT REQUEST RECEIVED AT /reimb');
+    console.log('PUT REQUEST RECEIVED AT /reimbs');
     console.log(req.body);
     try {
         let updatedUser = await reimbService.updateReimb(req.body);
@@ -68,7 +68,7 @@ ReimbRouter.put('', async (req, resp) => {
 
 ReimbRouter.delete('/reimb_id', async (req, resp) => {
     const id = +req.params.reimb_id;
-    console.log('DELETE REQUEST RECEIVED AT /reimb');
+    console.log('DELETE REQUEST RECEIVED AT /reimbs');
     try {
         let payload = await reimbService.deleteByID(id);
         return resp.status(201).json(payload);

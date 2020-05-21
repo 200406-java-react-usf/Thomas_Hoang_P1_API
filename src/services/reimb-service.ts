@@ -24,7 +24,7 @@ export class ReimbService {
             throw new BadRequestError();
         }
 
-        let reimbes = await this.reimbRepo.getAll();
+        let reimbes = await this.reimbRepo.getAllByUserID(id);
         if (reimbes.length == 0) {
             throw new ResourceNotFoundError();
         }

@@ -35,7 +35,7 @@ app.use(sessionMiddleware);
 app.use(corsFilter);
 app.use('/', express.json());
 app.use('/users', UserRouter);
-app.use('/reimb', ReimbRouter);
+app.use('/reimbs', ReimbRouter);
 app.use('/auth', AuthRouter);
 
 app.listen(8080, () => {
